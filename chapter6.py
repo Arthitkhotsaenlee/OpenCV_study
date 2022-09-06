@@ -28,12 +28,17 @@ def stackImages(imgArray,scale,lables=[]):
     height = imgArray[0][0].shape[0]
     sizeW = imgArray[0][0].shape[1]
     sizeH = imgArray[0][0].shape[0]
+    imageBlank = np.zeros((height, width, 3), np.uint8)
     if rowsAvailable:
         for x in range (0, rows):
             for y in range(0, cols):
-                imgArray[x][y] = cv2.resize(imgArray[x][y], (sizeW, sizeH), None, scale, scale)
-                if len(imgArray[x][y].shape) == 2: imgArray[x][y]= cv2.cvtColor( imgArray[x][y], cv2.COLOR_GRAY2BGR)
-        imageBlank = np.zeros((height, width, 3), np.uint8)
+                try:
+                    imgArray[x][y] = cv2.resize(imgArray[x][y], (sizeW, sizeH), None, scale, scale)
+                except:
+                    imgArray[x].append(imageBlank)
+                if len(imgArray[x][y].shape) == 2:
+                    imgArray[x][y] = cv2.cvtColor( imgArray[x][y], cv2.COLOR_GRAY2BGR)
+
         hor = [imageBlank]*rows
         hor_con = [imageBlank]*rows
         for x in range(0, rows):
